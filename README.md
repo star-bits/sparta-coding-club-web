@@ -42,7 +42,7 @@ def guestbook_post():
 
 ## GET (가져오기)
 
-### 1. app.py
+### 1. app.py: DB에서 가져와서 fetch로 넘겨줄 준비
 
 ```python
 @app.route("/guestbook", methods=["GET"])
@@ -52,7 +52,7 @@ def guestbook_get():
     return jsonify({'result': all_comments})
 ```
 
-### 2. index.html
+### 2. index.html: fetch로 넘겨받아서 body에 붙여넣음
 
 ```js
 function show_comment() {
