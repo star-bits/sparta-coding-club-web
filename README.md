@@ -6,6 +6,7 @@ mongodb howto
 venv gitignore
 Index on hithub 
 Requirements.tzt
+Add bs4, AWS to desc
 
 ## POST (저장하기)
 
