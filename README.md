@@ -5,6 +5,7 @@ formatting
 mongodb howto
 venv gitignore
 Index on hithub 
+Requirements.tzt
 
 ## POST (저장하기)
 
