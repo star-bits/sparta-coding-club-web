@@ -1,5 +1,10 @@
 # 웹개발 종합반
 
+aws deploy
+formatting
+mongodb howto
+venv gitignore
+
 ## POST (저장하기)
 
 ### 1. index.html: body에서 입력받고 script에서 처리해서 fetch로 POST API 콜
