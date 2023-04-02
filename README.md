@@ -79,3 +79,45 @@ function show_comment() {
     })
 }
 ```
+
+## vevn
+
+```shell
+python -m venv xvnv
+pip install flask pymongo dnspython
+```
+
+## AWS
+
+```shell
+mkdir deploy
+cp app.py deploy/application.py
+cp -r templates deploy/templates
+pip freeze > deploy/requirements.txt
+cd deploy
+```
+
+`application.py`
+```python
+application = app = Flask(__name__)
+app.run()
+```
+
+```shell
+pip install awsebcli
+
+eb init
+
+Select a default region: 10
+(aws-access-id): <Access key>
+(aws-secret-key): <Secret access key>
+Enter Application Name (default is "deploy"): 
+It appears you are using Python. Is this correct? (Y/n): Y
+Select a platform branch. (default is 1): 
+Do you want to set up SSH for your instances? (Y/n): Y
+Type a keypair name. (Default is aws-eb): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+
+eb create myweb
+```
