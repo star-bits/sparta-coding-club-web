@@ -80,7 +80,7 @@ function show_comment() {
 }
 ```
 
-## vevn
+## venv
 
 ```shell
 python -m venv xvnv
@@ -97,9 +97,12 @@ pip freeze > deploy/requirements.txt
 cd deploy
 ```
 
-`application.py`
+Changes to make in `application.py`:
 ```python
+# app = Flask(__name__)
 application = app = Flask(__name__)
+
+# app.run('0.0.0.0', port=5000, debug=True)
 app.run()
 ```
 
