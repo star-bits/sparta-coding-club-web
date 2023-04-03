@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 
 @app.route('/')
 def home():
-   return render_template('index.html')
+    return render_template('index.html')
 
 # 2. POST (저장하기)
 @app.route("/review_api", methods=["POST"])
