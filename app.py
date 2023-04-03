@@ -10,11 +10,9 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
 @app.route('/')
 def home():
    return render_template('index.html')
-
 
 # 2. POST (저장하기)
 @app.route("/review_api", methods=["POST"])
@@ -40,7 +38,6 @@ def review_post():
     db.review_db.insert_one(doc)
 
     return jsonify({'post_api_return': '저장하기 완료! (POST 연결 완료!)'})
-
    
 # 3. GET (가져오기)
 @app.route("/review_api", methods=["GET"])
