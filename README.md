@@ -4,18 +4,15 @@
 - AWS deployment: 
 
 aws deploy
-formatting
-mongodb howto
 venv gitignore
-Index on hithub 
 Requirements.tzt
-Add bs4, AWS to desc
+mongodb howto
 
 ## POST (저장하기)
 
 ### 1. index.html: body에서 입력받고 script에서 처리해서 fetch로 POST API 콜
 
-`<textarea id="comment">` -> `<button onclick="save_comment()">` -> `comment = $("#comment").val()` -> `formData.append("comment_give", comment` -> `fetch(guestbook, POST, formData)`
+`<textarea id="review">` -> `<button onclick="save_review()">` -> `$("#review").val()` -> `"review_give"` -> `formData`
 
 ```js
 // 1. POST (저장하기)
@@ -40,7 +37,7 @@ function save_review() {
 
 ### 2. app.py: 넘겨받은 데이터를 DB에 저장
 
-`comment_give` -> `guestbook_post()` -> `comment_receive` -> `doc` -> `db.fan.insert_one(doc)`
+`formData` -> `'review_give'` -> `review_receive` -> `doc` -> `db.insert_one(doc)`
 
 ```python
 # 2. POST (저장하기)
@@ -71,7 +68,9 @@ def review_post():
 
 ## GET (가져오기)
 
-### 1. app.py: DB에서 가져와서 fetch로 넘겨줄 준비
+### 3. app.py: DB에서 가져와서 fetch로 넘겨줄 준비
+
+`db.find()` -> `all_reviews` -> `'get_api_return'`
 
 ```python
 # 3. GET (가져오기)
@@ -82,7 +81,9 @@ def review_get():
     return jsonify({'get_api_return': all_reviews})
 ```
 
-### 2. index.html: fetch로 넘겨받아서 body에 붙여넣음
+### 4. index.html: fetch로 넘겨받아서 body에 붙여넣음
+
+`'get_api_return'` -> `rows` -> `a['review']` -> `review` -> `${review}`
 
 ```js
 // 4. GET (가져오기)
@@ -121,6 +122,7 @@ function show_review() {
 
 ```shell
 python -m venv xvnv
+
 pip install flask pymongo dnspython
 ```
 
