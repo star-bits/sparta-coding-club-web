@@ -1,5 +1,8 @@
 # 웹개발 종합반
 
+- GitHub Pages deployment: https://star-bits.github.io/sparta-coding-club-web-ex2/
+- AWS deployment: 
+
 aws deploy
 formatting
 mongodb howto
@@ -15,18 +18,22 @@ Add bs4, AWS to desc
 `<textarea id="comment">` -> `<button onclick="save_comment()">` -> `comment = $("#comment").val()` -> `formData.append("comment_give", comment` -> `fetch(guestbook, POST, formData)`
 
 ```js
-function save_comment() {
-
-    let name = $("#name").val()
-    let comment = $("#comment").val()
+// 1. POST (저장하기)
+function save_review() {
+    let url = $("#url").val()
+    let star = $('#star').val()
+    let review = $("#review").val()
 
     let formData = new FormData();
-    formData.append("name_give", name);
-    formData.append("comment_give", comment);
+    formData.append("url_give", url);
+    formData.append("star_give", star);
+    formData.append("review_give", review);
 
-    fetch('/guestbook', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
-        //console.log(data)
-        alert(data["msg"]);
+    fetch('/review_api', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
+        // fetch로 POST API 콜 하고 data를 넘겨받음
+        console.log(data)
+        alert(data["post_api_return"]);
+        window.location.reload()
     });
 }
 ```
@@ -36,16 +43,30 @@ function save_comment() {
 `comment_give` -> `guestbook_post()` -> `comment_receive` -> `doc` -> `db.fan.insert_one(doc)`
 
 ```python
-@app.route("/guestbook", methods=["POST"])
-def guestbook_post():
-    name_receive = request.form['name_give']
-    comment_receive = request.form['comment_give']
+# 2. POST (저장하기)
+@app.route("/review_api", methods=["POST"])
+def review_post():
+    url_receive = request.form['url_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get(url_receive,headers=headers)
+    soup = BeautifulSoup(data.text, 'html.parser')
+
+    ogtitle = soup.select_one('meta[property="og:title"]')['content']
+    ogimage = soup.select_one('meta[property="og:image"]')['content']
+
     doc = {
-        'name': name_receive,
-        'comment': comment_receive
+        'url': url_receive,
+        'star': star_receive,
+        'review': review_receive,
+        'title': ogtitle,
+        'image': ogimage
     }
-    db.fan.insert_one(doc)
-    return jsonify({'msg': '저장 완료(POST 연결 완료!)'})
+    db.review_db.insert_one(doc)
+
+    return jsonify({'post_api_return': '저장하기 완료! (POST 연결 완료!)'})
 ```
 
 ## GET (가져오기)
@@ -53,36 +74,44 @@ def guestbook_post():
 ### 1. app.py: DB에서 가져와서 fetch로 넘겨줄 준비
 
 ```python
-@app.route("/guestbook", methods=["GET"])
-def guestbook_get():
-    all_comments = list(db.fan.find({},{'_id':False}))
-
-    return jsonify({'result': all_comments})
+# 3. GET (가져오기)
+@app.route("/review_api", methods=["GET"])
+def review_get():
+    all_reviews = list(db.review_db.find({},{'_id':False}))
+    print(all_reviews)
+    return jsonify({'get_api_return': all_reviews})
 ```
 
 ### 2. index.html: fetch로 넘겨받아서 body에 붙여넣음
 
 ```js
-function show_comment() {
-    fetch('/guestbook').then((res) => res.json()).then((data) => {
-        // alert(data["msg"])
-        let rows = data['result']
+// 4. GET (가져오기)
+function show_review() {
+    fetch('/review_api').then((res) => res.json()).then((data) => {
+        alert('가져오기 완료! (GET 연결 완료!)')
 
+        let rows = data['get_api_return']
         console.log(rows)
-        $("#comment-list").empty()
-        rows.forEach((a)=>{
-            let name = a['name']
-            let comment = a['comment']
+        $("#review-list").empty()
+        rows.forEach((a) => {
+            let url = a['url']
+            let star = a['star']
+            let star_repeat = '⭐'.repeat(star)
+            let review = a['review']
+            let title = a['title']
+            let image = a['image']
 
-            let temp_html = `<div class="card">
+            let temp_html = `<div class="card h-100">
+                                <img src="${image}"
+                                    class="card-img-top">
                                 <div class="card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p>${comment}</p>
-                                        <footer class="blockquote-footer">${name}</footer>
-                                    </blockquote>
+                                    <h5 class="card-title">${title.slice(0, -7)}</h5>
+                                    <p>${star_repeat}</p>
+                                    <p class="mycomment">${review}</p>
                                 </div>
                             </div>`
-            $("#comment-list").append(temp_html)
+
+            $("#review-list").append(temp_html)
         })
     })
 }
