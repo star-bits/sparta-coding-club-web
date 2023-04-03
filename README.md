@@ -3,11 +3,6 @@
 - GitHub Pages deployment: https://star-bits.github.io/sparta-coding-club-web-ex2/
 - AWS deployment: 
 
-aws deploy
-venv gitignore
-Requirements.tzt
-mongodb howto
-
 ## POST (저장하기)
 
 ### 1. index.html: body에서 입력받고 script에서 처리해서 fetch로 POST API 콜
