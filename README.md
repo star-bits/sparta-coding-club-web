@@ -121,6 +121,22 @@ source xvnv/bin/activate
 pip install flask pymongo dnspython
 ```
 
+## MongoDB
+
+### Database
+
+`Build a Database` -> `Create Cluster` -> `Username: sparta, Password: test` -> `Create User` -> `IP Address: 0.0.0.0` -> `Add Entry`
+
+### Connection String
+
+```python
+from pymongo import MongoClient
+client = MongoClient('<url>')
+db = client.dbsparta
+```
+
+`Cluster0` -> `Connect` -> `Connect your application` -> `Driver: Python, Version: 3.6 or later` -> `connection string` = `<url>`
+
 ## AWS
 
 ```shell
