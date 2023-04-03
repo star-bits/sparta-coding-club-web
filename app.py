@@ -46,7 +46,7 @@ def review_post():
 @app.route("/review_api", methods=["GET"])
 def review_get():
     all_reviews = list(db.review_db.find({},{'_id':False}))
-    # print(all_reviews)
+    print(all_reviews)
     return jsonify({'get_api_return': all_reviews})
 
    
