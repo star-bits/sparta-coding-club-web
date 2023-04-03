@@ -30,7 +30,6 @@
             font-family: "Noto Serif KR", serif;
         }
     </style> -->
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
@@ -44,10 +43,7 @@
             width: 100%;
             height: 300px;
 
-            background-image: linear-gradient(0deg,
-                    rgba(0, 0, 0, 0.5),
-                    rgba(0, 0, 0, 0.5)),
-                url("https://preview.redd.it/1jofyu3ugsiz.jpg?auto=webp&s=b03d76f25521080e00d7853bb042713526104d2e");
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://preview.redd.it/1jofyu3ugsiz.jpg?auto=webp&s=b03d76f25521080e00d7853bb042713526104d2e");
             background-position: center 30%;
             background-size: cover;
 
@@ -124,11 +120,10 @@
         // 4. GET (가져오기)
         function show_review() {
             fetch('/review_api').then((res) => res.json()).then((data) => {
-                alert('가져오기 완료!(GET 연결 완료!)')
+                alert('가져오기 완료! (GET 연결 완료!)')
 
                 let rows = data['get_api_return']
                 console.log(rows)
-
                 $("#review-list").empty()
                 rows.forEach((a) => {
                     let url = a['url']
@@ -160,7 +155,6 @@
         <h1>대충 영화 리뷰 사이트</h1>
         <p>현재기온: <span id="current_temperature">0</span>도</p>
     </div>
-
 
 
     <div class="mypost">
@@ -195,7 +189,6 @@
             </div>
         </div>
     </div>
-
 
 
     <div class="mycards" id="review-list">
