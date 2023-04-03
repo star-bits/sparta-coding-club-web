@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <!-- jQuery library hosted by Google -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>대충 영화 리뷰 사이트</title>
+
+    <meta property="og:title" content="대충 영화 리뷰 사이트" />
+    <meta property="og:description" content="HTML, Flask, bs4, MongoDB, AWS 연습" />
+    <meta property="og:image"
+        content="https://preview.redd.it/1jofyu3ugsiz.jpg?auto=webp&s=b03d76f25521080e00d7853bb042713526104d2e" />
+
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            font-family: "Noto Serif KR", serif;
+        }
+    </style> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+
+    <style>
+        .mypic {
+            width: 100%;
+            height: 300px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://preview.redd.it/1jofyu3ugsiz.jpg?auto=webp&s=b03d76f25521080e00d7853bb042713526104d2e");
+            background-position: center 30%;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 20px auto;
+            /* CSS Box Model */
+            border: 1px solid gray;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .mybutton {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .mycards {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycards>.card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            show_temperature();
+            show_review();
+        });
+
+        function show_temperature() {
+            fetch("http://spartacodingclub.shop/sparta_api/weather/seoul").then((res) => res.json()).then((data) => {
+                console.log(data)
+                console.log(data['temp'])
+
+                let current_temp = Math.round(data['temp'])
+                $('#current_temperature').text(current_temp)
+            });
+        }
+
+        // 1. POST (저장하기)
+        function save_review() {
+            let url = $("#url").val()
+            let star = $('#star').val()
+            let review = $("#review").val()
+
+            let formData = new FormData();
+            formData.append("url_give", url);
+            formData.append("star_give", star);
+            formData.append("review_give", review);
+
+            fetch('/review_api', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
+                // fetch로 POST API 콜 하고 data를 넘겨받음
+                console.log(data)
+                alert(data["post_api_return"]);
+                window.location.reload()
+            });
+        }
+
+        // 4. GET (가져오기)
+        function show_review() {
+            fetch('/review_api').then((res) => res.json()).then((data) => {
+                alert('가져오기 완료! (GET 연결 완료!)')
+
+                let rows = data['get_api_return']
+                console.log(rows)
+                $("#review-list").empty()
+                rows.forEach((a) => {
+                    let url = a['url']
+                    let star = a['star']
+                    let star_repeat = '⭐'.repeat(star)
+                    let review = a['review']
+                    let title = a['title']
+                    let image = a['image']
+
+                    let temp_html = `<div class="card h-100">
+                                        <img src="${image}"
+                                            class="card-img-top">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${title.slice(0, -7)}</h5>
+                                            <p>${star_repeat}</p>
+                                            <p class="mycomment">${review}</p>
+                                        </div>
+                                    </div>`
+
+                    $("#review-list").append(temp_html)
+                })
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div class="mypic">
+        <h1>대충 영화 리뷰 사이트</h1>
+        <p>현재기온: <span id="current_temperature">0</span>도</p>
+    </div>
+
+
+    <div class="mypost">
+        <!-- https://getbootstrap.com/docs/5.0/forms/input-group/ -->
+        <label for="basic-url" class="form-label">IMDb 영화 URL</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">URL</span>
+            <input type="text" class="form-control" id="url" placeholder="https://www.imdb.com/title/tt0381849/"
+                aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">별점</label>
+            <select class="form-select" id="star">
+                <!-- <option selected>선택하기</option> -->
+                <option value="1">⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-text">리뷰</span>
+            <textarea class="form-control" aria-label="With textarea" id="review"></textarea>
+        </div>
+
+        <div class="mybutton">
+            <div class="d-grid gap-2">
+                <button onclick="save_review()" class="btn btn-dark" type="button">리뷰 저장</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mycards" id="review-list">
+        <div class="card h-100">
+            <img src="https://m.media-amazon.com/images/M/MV5BZGRjM2IyM2EtZDAxYi00NTdjLTliMGYtMmRhZGUyNjRjNWYwXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg"
+                class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Master and Commander: The Far Side of the World (2003)</h5>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p class="mycomment">Master and Commander: The Far Side of the World는 역사적 배경과 잘 짜여진 스토리로 관객들의 호기심을 자극한다.
+                    러셀 크로우와 폴 벳티가 역할을 소화하는 뛰어난 연기력으로, 그들의 인물상이 생생하게 묘사되어 있다. 이 영화는 특히, 조연들의 멋진 연기와 함께 잘 펼쳐진 전투 장면으로
+                    유명하며, 토니 스콧 감독의 연출은 화려하면서도 감동적이다.</p>
+            </div>
+        </div>
+
+        <div class="card h-100">
+            <img src="https://m.media-amazon.com/images/M/MV5BMjA5NjM3NTk1M15BMl5BanBnXkFtZTgwMzg1MzU2NjE@._V1_FMjpg_UX1000_.jpg"
+                class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Sicario (2015)</h5>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p class="mycomment">Sicario는 놀라운 액션과 긴장감 넘치는 스토리로 관객들을 사로잡는다. 강렬한 연출과 연기력, 멋진 비주얼은 이 작품이 당당히 현대 액션 영화의
+                    최고봉 중 하나임을 증명한다. 또한, 감독 데니 빌뇌브의 음악과 시각적인 효과는 관객들의 감정을 최대한으로 자극하며, 더욱더 몰입도를 높여준다.</p>
+            </div>
+        </div>
+
+        <div class="card h-100">
+            <img src="https://m.media-amazon.com/images/M/MV5BODE0NTcxNTQzNF5BMl5BanBnXkFtZTcwMzczOTIzMw@@._V1_FMjpg_UX1000_.jpg"
+                class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">3:10 to Yuma (2007)</h5>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p class="mycomment">3:10 to Yuma는 멋진 스토리와 전투 장면, 그리고 강렬한 연기력으로 관객들을 사로잡는다. 러셀 크로우와 크리스찬 베일의 연기가 인상적이며,
+                    그들의 감정이 자연스럽게 전달되어 관객들의 공감을 이끌어낸다. 감독 제임스 맨골드는 우아한 연출과 잘 짜여진 스토리로 이 작품을 완성시켰다.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
