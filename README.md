@@ -145,7 +145,7 @@ pip install awsebcli
 
 eb init
 
-Select a default region: 10
+Select a default region (default is 3): 10
 (aws-access-id): <Access key>
 (aws-secret-key): <Secret access key>
 Enter Application Name (default is "deploy"): 
