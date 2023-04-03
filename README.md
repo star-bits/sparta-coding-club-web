@@ -117,7 +117,7 @@ function show_review() {
 
 ```shell
 python -m venv xvnv
-
+source xvnv/bin/activate
 pip install flask pymongo dnspython
 ```
 
