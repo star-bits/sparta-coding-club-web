@@ -137,6 +137,23 @@ db = client.dbsparta
 
 `Cluster0` -> `Connect` -> `Connect your application` -> `Driver: Python, Version: 3.6 or later` -> `connection string` = `<url>`
 
+```python
+# insert
+db.review_db.insert_one(doc)
+
+# find all
+all_reviews = list(db.review_db.find({}, {'_id':False}))
+
+# find one
+review = db.review_db.find_one({}, {'_id':False})
+
+# update
+db.review_db.update_one({'url': "https://www.imdb.com/title/tt3228774"}, {'$set': {'star': 4}})
+
+# delete
+db.review_db.delete_one({'url': "https://www.imdb.com/title/tt3228774"})
+```
+
 ## AWS
 
 ```shell
