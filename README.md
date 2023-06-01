@@ -1,8 +1,5 @@
 # 웹개발 종합반
 
-- GitHub Pages deployment: https://star-bits.github.io/sparta-coding-club-web-ex2/
-- AWS deployment: http://myweb2.eba-drxdpq3c.ap-northeast-2.elasticbeanstalk.com/
-
 ## POST (저장하기)
 
 ### 1. index.html: body에서 입력받고 script에서 처리해서 fetch로 POST API 콜
