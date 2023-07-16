@@ -153,6 +153,7 @@ db.review_db.delete_one({'url': "https://www.imdb.com/title/tt3228774"})
 
 ## AWS
 
+### `./deploy`
 ```shell
 mkdir deploy
 cp app.py deploy/application.py
@@ -161,7 +162,7 @@ pip freeze > deploy/requirements.txt
 cd deploy
 ```
 
-Changes to make in `application.py`:
+### `application.py`
 ```python
 # app = Flask(__name__)
 application = app = Flask(__name__)
@@ -170,6 +171,7 @@ application = app = Flask(__name__)
 app.run()
 ```
 
+### `awsebcli`
 ```shell
 pip install awsebcli
 
